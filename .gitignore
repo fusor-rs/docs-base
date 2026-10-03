@@ -1,0 +1,6 @@
+/target/
+/dist/
+/node_modules/
+/examples/book/dist/
+/examples/book/public/content/
+/examples/book/public/docs-base.css

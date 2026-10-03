@@ -1,0 +1,45 @@
+<template rust:component="Shell">
+  <div class="site" class:dark="state.dark.get()"
+       class:menu-open="state.navigation.menu.get()" on:keydown="state.keyboard(event)">
+    <a class="skip" href="#main-content">Skip to content</a>
+    <header class="topbar">
+      <a class="brand" data-fusor-link href="{{ state.navigation.site.base_path }}"
+         on:click="state.navigation.open()">
+        <img class="brand-mark" src="{{ state.navigation.site.logo }}" width="33" height="33" alt="" />
+        <strong>{{ state.navigation.site.name }}<span class="brand-slash">/</span><span class="brand-docs">docs</span></strong>
+      </a>
+      <span class="version">{{ state.navigation.site.version }}</span>
+      <nav aria-label="Top navigation" rust:slot="state.header.clone()"></nav>
+      <div class="header-actions">
+        <button class="theme-toggle" aria-label="Toggle color theme" on:click="state.theme()">
+          {{ if state.dark.get() { "☀" } else { "◐" } }}
+        </button>
+        <button class="menu-toggle" aria-label="Toggle navigation"
+                aria-expanded="{{ state.navigation.menu.get() }}"
+                on:click="state.navigation.menu.update(|open| *open = !*open)">☰</button>
+      </div>
+    </header>
+    <div class="docs-layout">
+      <aside class="sidebar" aria-label="Documentation navigation">
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="search" type="search" placeholder="Search docs…"
+                 aria-label="Search documentation" bind="state.navigation.query" />
+          <kbd>⌘ K</kbd>
+        </label>
+        <p class="search-empty" hidden="{{ state.has_matches() }}">No matching guides.</p>
+        <nav>
+          <div><ForEach items="{{ state.navigation.groups() }}" key="{{ |item| *item }}">
+            <NavGroup item="{{ item.clone() }}" navigation="{{ state.navigation.clone() }}"></NavGroup>
+          </ForEach></div>
+          <div rust:slot="state.sidebar.clone()"></div>
+        </nav>
+        <div class="sidebar-bottom">
+          <span class="status-dot"></span> Open source. Built in Rust.
+          <small>Early access documentation</small>
+        </div>
+      </aside>
+      <main class="outlet"><Children></Children></main>
+    </div>
+  </div>
+</template>

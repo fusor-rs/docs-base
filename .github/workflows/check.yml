@@ -1,0 +1,28 @@
+name: Check
+on: [push, pull_request]
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: taiki-e/install-action@just
+      - run: just check
+      - uses: dtolnay/rust-toolchain@1.85
+      - run: just msrv
+      - run: just packages
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: taiki-e/install-action@just
+      - run: just setup-browser
+      - run: npx playwright install-deps chromium
+      - run: just browser

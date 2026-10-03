@@ -1,0 +1,28 @@
+<template rust:component="NavGroup">
+  <div class="nav-group" hidden="{{ !state.visible() }}">
+    <h2>{{ state.item.get() }}</h2>
+    <ul><ForEach items="{{ state.entries() }}" key="{{ |item| *item }}">
+      <NavEntry item="{{ item.clone() }}" navigation="{{ state.navigation.clone() }}"></NavEntry>
+    </ForEach></ul>
+  </div>
+</template>
+<template rust:component="NavEntry">
+  <li hidden="{{ !state.visible() }}">
+    <div class="nav-entry">
+      <a data-fusor-link href="{{ state.navigation.site.href(&state.navigation.site.pages[state.item.get()]) }}"
+         class:active="state.navigation.active.get() == Location::Guide(state.item.get())"
+         aria-current='{{ if state.navigation.active.get() == Location::Guide(state.item.get()) { "page" } else { "false" } }}'
+         on:click="state.navigation.open()">{{ state.title() }}</a>
+      <button class="nav-toggle" hidden="{{ state.children().is_empty() }}"
+              aria-label='{{ format!("Toggle {} subpages", state.title()) }}'
+              aria-controls='{{ format!("nav-children-{}", state.item.get()) }}'
+              aria-expanded="{{ state.is_open() }}" on:click="state.toggle()">
+        <span aria-hidden="true">{{ if state.is_open() { "⌄" } else { "›" } }}</span>
+      </button>
+    </div>
+    <ul class="nav-children" id='{{ format!("nav-children-{}", state.item.get()) }}'
+        hidden="{{ !state.is_open() }}"><ForEach items="{{ state.children() }}" key="{{ |item| *item }}">
+      <NavEntry item="{{ item.clone() }}" navigation="{{ state.navigation.clone() }}"></NavEntry>
+    </ForEach></ul>
+  </li>
+</template>

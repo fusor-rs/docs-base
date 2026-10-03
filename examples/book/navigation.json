@@ -1,0 +1,5 @@
+[
+  { "slug": "", "group": "Learn" },
+  { "slug": "topics", "group": "Learn" },
+  { "slug": "topics/authoring", "group": "Learn", "parent": "topics" }
+]

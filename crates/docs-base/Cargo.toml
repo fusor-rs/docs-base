@@ -1,0 +1,26 @@
+[package]
+name = "docs-base"
+description = "Shared Markdown documentation components for Fusor applications"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+include = ["src/**", "web/**", "build.rs", "Cargo.toml", "LICENSE"]
+
+[dependencies]
+fusor.workspace = true
+fusor-components.workspace = true
+wasm-bindgen.workspace = true
+web-sys.workspace = true
+
+[build-dependencies]
+fusor-build.workspace = true
+
+[package.metadata.fusor]
+entry = "web/shell.html"
+templates = ["web"]
+
+[lints]
+workspace = true

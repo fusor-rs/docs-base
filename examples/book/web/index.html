@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="A runnable documentation site using docs-base." />
+    <title>Example book documentation</title>
+    <link rel="icon" href="/manual/favicon.svg" />
+    <link rel="stylesheet" href="/manual/docs-base.css" />
+  </head>
+  <body>
+    <script type="text/rust" src="../src/app.rs" rust:module="crate::app"></script>
+    <App state="{{ App::new() }}">
+      <div class="docs-app">
+        <Shell navigation="{{ state.navigation.clone() }}" header="{{ Some(state.header.clone()) }}" sidebar="{{ None }}">
+          <Router><Route fallback>
+            <DocRoute navigation="{{ state.navigation.clone() }}"></DocRoute>
+          </Route></Router>
+        </Shell>
+      </div>
+    </App>
+  </body>
+</html>
+
+<template rust:component="Header">
+  <div>
+    <a href="https://github.com/fusor-rs/docs-base">GitHub ↗</a>
+    <a href="https://fusor.build/docs/">Fusor ↗</a>
+  </div>
+</template>
+<template rust:component="DocRoute">
+  <div class="doc-route">
+    <Article site="{{ &SITE }}" index="{{ state.index }}" extras="{{ ArticleExtras::default() }}"></Article>
+  </div>
+</template>

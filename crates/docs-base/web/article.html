@@ -1,0 +1,92 @@
+<template rust:component="Article">
+  <div class="article-layout">
+    <article class="article" id="main-content" tabindex="-1">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a data-fusor-link href="{{ state.site.base_path }}">Docs</a><span>/</span>
+        <span>{{ state.page.group }}</span>
+        <span><ForEach items="{{ state.breadcrumbs() }}" key="{{ |item| item.href }}">
+<Breadcrumb item="{{ item.clone() }}" base_path="{{ state.site.base_path }}"></Breadcrumb>
+</ForEach></span>
+      </nav>
+      <h1>{{ state.page.title }}</h1>
+      <div class="lead" rust:slot="markdown(state.page.lead)"></div>
+      <details class="mobile-toc">
+        <summary>On this page</summary>
+        <ul
+        ><ForEach items="{{ state.page.sections.to_vec() }}" key="{{ |item| item.id }}">
+<Toc item="{{ item.clone() }}"></Toc>
+</ForEach></ul>
+      </details>
+      <div rust:slot="state.extras.before.clone()"></div>
+      <div
+        class="sections"
+      ><ForEach items="{{ state.page.sections.to_vec() }}" key="{{ |item| item.id }}">
+<GuideSection item="{{ item.clone() }}"></GuideSection>
+</ForEach></div>
+      <div rust:slot="state.extras.after.clone()"></div>
+      <div class="article-footer">
+        <a
+          href="{{ state.page.source }}"
+          hidden="{{ state.page.source.is_empty() }}"
+          target="_blank"
+          rel="noopener"
+          >View Markdown source</a
+        ><span rust:slot="state.extras.footer.clone()"></span>
+      </div>
+      <nav class="pagination" aria-label="Adjacent pages">
+        <a
+          data-fusor-link
+          hidden="{{ state.index.is_none_or(|index| index == 0) }}"
+          href="{{ state.site.href(&state.site.pages[state.previous()]) }}"
+          ><small>← Previous</small
+          ><strong>{{ state.site.pages[state.previous()].title }}</strong></a
+        >
+        <a
+          data-fusor-link
+          hidden="{{ state.index.is_none_or(|index| index + 1 >= state.site.pages.len()) }}"
+          href="{{ state.site.href(&state.site.pages[state.next()]) }}"
+          ><small>Next →</small
+          ><strong>{{ state.site.pages[state.next()].title }}</strong></a
+        >
+      </nav>
+    </article>
+    <aside class="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <ul
+      ><ForEach items="{{ state.page.sections.to_vec() }}" key="{{ |item| item.id }}">
+<Toc item="{{ item.clone() }}"></Toc>
+</ForEach></ul>
+      <div class="toc-note" rust:slot="state.extras.aside.clone()"></div>
+    </aside>
+  </div>
+</template>
+<template rust:component="GuideSection">
+  <section class="doc-section" id="{{ state.item.get().id }}">
+    <div rust:slot="markdown(state.item.get().html)"></div>
+    <details class="api-references" hidden="{{ state.item.get().references.is_empty() }}">
+      <summary>In this example ({{ state.item.get().references.len() }})</summary>
+      <ul class="related-links" aria-label="API and syntax references"><ForEach items="{{ state.item.get().references.to_vec() }}" key="{{ |item| item.href }}">
+<RelatedLink item="{{ item.clone() }}"></RelatedLink>
+</ForEach></ul>
+    </details>
+  </section>
+</template>
+<template rust:component="Toc"
+  ><li>
+    <a href="#{{ state.item.get().id }}">{{ state.item.get().title }}</a>
+  </li></template
+>
+<template rust:component="RelatedLink"
+  ><li>
+    <a
+      data-fusor-link
+      href="{{ state.item.get().href }}"
+      rel="noopener"
+      >{{ state.item.get().label }} →</a
+    >
+  </li></template
+>
+
+<template rust:component="Breadcrumb"><span><span>/</span>
+  <a data-fusor-link href="{{ state.base_path }}{{ state.item.get().href }}">{{ state.item.get().label }}</a>
+</span></template>
