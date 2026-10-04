@@ -5,9 +5,10 @@ Fusor and Hypercmd keep their guides, branding, routes and interactive examples
 in their own repositories. This repository owns the Markdown compiler, article
 layout, navigation, search and theme controls.
 
-Requires Rust 1.85 or later and Fusor 0.1.4. These internal packages are consumed
-from Git and set `publish = false`. Pin both packages to the same commit
+Requires Rust 1.85 or later and Fusor `>=0.1.4, <0.2.0`. These internal packages
+are consumed from Git and set `publish = false`. Pin both packages to the same commit
 in a consuming application's manifest and commit its Cargo lockfile.
+Compatible Fusor patch releases do not require a docs-base revision change.
 
 | Package | Responsibility |
 | --- | --- |
@@ -43,6 +44,9 @@ also needs Fusor, `fusor-components`, `fusor-router` and `fusor-build`; the
 [example manifest](examples/book/Cargo.toml) shows compatible versions and
 features. Fusor checkouts must patch `fusor-core`, `fusor-components` and
 `fusor-build` to the same checkout to keep compiler and runtime contracts aligned.
+After bumping the checkout version, update those packages in the consuming
+lockfile so Cargo selects the local patches instead of retaining the previous
+registry versions.
 
 The [build script](examples/book/build.rs) calls `docs_base_build::compile`
 with content paths and a base path, writes the generated Rust to `OUT_DIR`,
