@@ -33,6 +33,7 @@ pub struct Article {
     extras: ArticleExtras,
 }
 
+#[derive(fusor::Inputs)]
 pub struct ArticleInputs {
     pub site: &'static Site,
     pub index: Option<usize>,

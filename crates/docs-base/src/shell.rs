@@ -16,6 +16,7 @@ pub struct Shell {
     storage: Option<web_sys::Storage>,
 }
 
+#[derive(fusor::Inputs)]
 pub struct ShellInputs {
     pub navigation: Navigation,
     pub header: Option<Content>,
